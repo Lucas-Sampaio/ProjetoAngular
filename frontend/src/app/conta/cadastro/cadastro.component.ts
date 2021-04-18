@@ -92,7 +92,7 @@ export class CadastroComponent implements OnInit, AfterViewInit {
     this.cadastroForm.reset();
     this.errors = [];
     this.contaService.LocalStorage.salvarDadosLocaisUsuario(response);
-    this.router.navigate(['/home']);
+
     let toast = this.toastr.success('Registro realizado com sucesso!', 'Bem Vindo!');
     if (toast) {
       toast.onHidden.subscribe(() => {
