@@ -17,7 +17,7 @@ export class ContaService extends BaseService {
         map(this.extractData),
         catchError(this.serviceError)
       )
-      return response;
+    return response;
   }
 
   login(usuario: Usuario) {
