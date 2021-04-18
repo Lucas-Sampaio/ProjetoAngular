@@ -18,7 +18,8 @@ export class CadastroComponent implements OnInit, AfterViewInit {
 
   errors: any[] = [];
   cadastroForm: FormGroup;
-  usuario: Usuario
+  usuario: Usuario;
+  mudancasNaoSalvas: boolean;
 
   validationMessages: ValidationMessages;
   genericValidator: GenericValidator;
@@ -53,6 +54,7 @@ export class CadastroComponent implements OnInit, AfterViewInit {
 
     merge(...controlBlurs).subscribe(() => {
       this.displayMessage = this.genericValidator.processarMensagens(this.cadastroForm);
+      this.mudancasNaoSalvas = true;
     });
   }
 
@@ -81,6 +83,8 @@ export class CadastroComponent implements OnInit, AfterViewInit {
           sucesso => { this.processarSucesso(sucesso) },
           falha => { this.processarFalha(falha) }
         );
+
+        this.mudancasNaoSalvas = false;
     }
   }
 
