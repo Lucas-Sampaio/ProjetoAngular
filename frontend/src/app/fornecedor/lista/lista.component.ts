@@ -17,9 +17,9 @@ export class ListaComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.fornecedorService.obterTodos().pipe(
-      switchMap((fornecedores) => this.fornecedores = fornecedores)
-    )
+    this.fornecedorService.obterTodos()
+    .subscribe(fornecedores =>  this.fornecedores = fornecedores);
+
   }
 
 }

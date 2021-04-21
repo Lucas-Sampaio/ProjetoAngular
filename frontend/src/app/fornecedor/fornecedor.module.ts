@@ -9,6 +9,10 @@ import { FornecedorAppComponent } from './fornecedor.app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FornecedorRoutingModule } from './fornecedor.route';
+import { TextMaskModule } from 'angular2-text-mask';
+import { NgBrazil } from 'ng-brazil';
+import { FornecedorService } from './services/fornecedor.service';
+
 
 
 
@@ -27,6 +31,11 @@ import { FornecedorRoutingModule } from './fornecedor.route';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgBrazil,
+    TextMaskModule
+  ],
+  providers: [
+    FornecedorService,
   ]
 })
 export class FornecedorModule { }

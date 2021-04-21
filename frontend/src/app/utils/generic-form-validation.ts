@@ -4,7 +4,7 @@ export class GenericValidator {
   constructor(private validationMessages: ValidationMessages) { }
 
   processarMensagens(container: FormGroup): { [key: string]: string } {
-    let messages : any;
+    let messages : any = {};
     for (let controlKey in container.controls) {
       if (container.controls.hasOwnProperty(controlKey)) {
         let c = container.controls[controlKey];
