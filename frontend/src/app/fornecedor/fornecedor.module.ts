@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetalhesComponent } from './detalhes/detalhes.component';
 import { EditarComponent } from './editar/editar.component';
@@ -13,6 +13,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { NgBrazil } from 'ng-brazil';
 import { FornecedorService } from './services/fornecedor.service';
 import { FornecedorResolve } from './services/fornecedor.resolve';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 
@@ -33,8 +34,10 @@ import { FornecedorResolve } from './services/fornecedor.resolve';
     ReactiveFormsModule,
     HttpClientModule,
     NgBrazil,
-    TextMaskModule
+    TextMaskModule,
+    NgxSpinnerModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     FornecedorService,
     FornecedorResolve
