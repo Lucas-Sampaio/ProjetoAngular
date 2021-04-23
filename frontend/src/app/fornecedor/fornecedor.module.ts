@@ -12,6 +12,7 @@ import { FornecedorRoutingModule } from './fornecedor.route';
 import { TextMaskModule } from 'angular2-text-mask';
 import { NgBrazil } from 'ng-brazil';
 import { FornecedorService } from './services/fornecedor.service';
+import { FornecedorResolve } from './services/fornecedor.resolve';
 
 
 
@@ -36,6 +37,7 @@ import { FornecedorService } from './services/fornecedor.service';
   ],
   providers: [
     FornecedorService,
+    FornecedorResolve
   ]
 })
 export class FornecedorModule { }
