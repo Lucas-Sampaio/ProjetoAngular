@@ -1,28 +1,32 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { Fornecedor } from '../models/fornecedor';
-import { FornecedorService } from '../services/fornecedor.service';
+
 
 @Component({
   selector: 'app-detalhes',
   templateUrl: './detalhes.component.html',
 })
-export class DetalhesComponent implements OnInit {
+export class DetalhesComponent {
 
   fornecedor: Fornecedor = new Fornecedor();
+  enderecoMap: any;
 
   constructor(
     private route: ActivatedRoute,
-    private fornecedorService: FornecedorService) { }
+    private sanitizer: DomSanitizer) {
 
-  ngOnInit(): void {
-    let fornecedor$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.fornecedorService.obterPorId(params.get('id'))
-      )
-    )
-    fornecedor$.subscribe(fornecedor => this.fornecedor = fornecedor);
+    this.fornecedor = this.route.snapshot.data['fornecedor'];
+    this.enderecoMap = this.sanitizer.bypassSecurityTrustResourceUrl("https://www.google.com/maps/embed/v1/place?q=" +
+      this.EnderecoCompleto() + "&key=AIzaSyD2YohK-eFDjgF9PiwxLcKyHWlRhVLlrZI")
   }
 
+
+  public EnderecoCompleto(): string {
+    let endereco = this.fornecedor.endereco;
+    return endereco.logradouro + ", " + endereco.numero + " - "
+      + "-" + endereco.bairro + ", " + endereco.cidade + " - " +
+      endereco.estado;
+  }
 }

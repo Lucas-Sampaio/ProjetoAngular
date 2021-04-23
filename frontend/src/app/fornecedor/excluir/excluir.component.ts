@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { switchMap } from 'rxjs/operators';
 import { Fornecedor } from '../models/fornecedor';
 import { FornecedorService } from '../services/fornecedor.service';
 
@@ -9,7 +8,7 @@ import { FornecedorService } from '../services/fornecedor.service';
   selector: 'app-excluir',
   templateUrl: './excluir.component.html',
 })
-export class ExcluirComponent implements OnInit {
+export class ExcluirComponent {
 
   fornecedor: Fornecedor = new Fornecedor();
 
@@ -18,15 +17,8 @@ export class ExcluirComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService) {
-  }
 
-  ngOnInit(): void {
-    let fornecedor$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.fornecedorService.obterPorId(params.get('id'))
-      )
-    )
-    fornecedor$.subscribe(fornecedor => this.fornecedor = fornecedor);
+    this.fornecedor = this.route.snapshot.data["fornecedor"];
   }
 
   excluirEvento() {
