@@ -6,7 +6,6 @@ import { ExcluirComponent } from './excluir/excluir.component';
 import { ListaComponent } from './lista/lista.component';
 import { NovoComponent } from './novo/novo.component';
 import { FornecedorAppComponent } from './fornecedor.app.component';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FornecedorRoutingModule } from './fornecedor.route';
 import { TextMaskModule } from 'angular2-text-mask';
@@ -32,7 +31,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     FornecedorRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     NgBrazil,
     TextMaskModule,
     NgxSpinnerModule
