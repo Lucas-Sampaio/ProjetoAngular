@@ -11,6 +11,7 @@ import { FornecedorService } from '../services/fornecedor.service';
 export class ExcluirComponent {
 
   fornecedor: Fornecedor = new Fornecedor();
+  errors: any[] = [];
 
   constructor(
     private fornecedorService: FornecedorService,
@@ -24,10 +25,11 @@ export class ExcluirComponent {
   excluirEvento() {
     this.fornecedorService.excluirFornecedor(this.fornecedor.id)
       .subscribe(
-        evento => { this.sucessoExclusao(evento) },
-        error => { this.falha() }
+        fornecedor => { this.sucessoExclusao(fornecedor) },
+        error => { this.falha(error) }
       );
   }
+
   sucessoExclusao(evento: any) {
 
     const toast = this.toastr.success('Fornecedor excluido com Sucesso!', 'Good bye :D');
@@ -38,7 +40,8 @@ export class ExcluirComponent {
     }
   }
 
-  falha() {
+  falha(fail : any) {
+    this.errors = fail.error.errors;
     this.toastr.error('Houve um erro no processamento!', 'Ops! :(');
   }
 }
