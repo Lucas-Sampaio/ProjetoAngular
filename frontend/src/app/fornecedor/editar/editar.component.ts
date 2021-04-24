@@ -36,7 +36,7 @@ export class EditarComponent implements OnInit {
   displayMessage: DisplayMessage = {};
   textoDocumento: string = '';
 
-  textDocumento:string;
+  textDocumento: string;
   tipoFornecedor: number;
   formResult: string = '';
 
@@ -48,7 +48,7 @@ export class EditarComponent implements OnInit {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService ) {
+    private spinner: NgxSpinnerService) {
 
     this.validationMessages = {
       nome: {
@@ -109,16 +109,6 @@ export class EditarComponent implements OnInit {
     this.spinner.hide();
   }
 
-  ngAfterViewInit() {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-
-    merge(...controlBlurs).subscribe(() => {
-      this.displayMessage = this.genericValidator.processarMensagens(this.fornecedorForm);
-      this.mudancasNaoSalvas = true;
-    });
-  }
-
   preencherForm() {
 
     this.fornecedorForm.patchValue({
@@ -150,6 +140,25 @@ export class EditarComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.tipoFornecedorForm()?.valueChanges.subscribe(() => {
+      this.trocarValidacaoDocumento();
+      this.configurarElementosValidacao();
+      this.validarFormulario();
+    });
+
+    this.configurarElementosValidacao();
+  }
+
+  configurarElementosValidacao() {
+    let controlBlurs: Observable<any>[] = this.formInputElements
+      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
+
+    merge(...controlBlurs).subscribe(() => {
+      this.validarFormulario();
+    });
+  }
+
   trocarValidacaoDocumento() {
     if (this.tipoFornecedorForm()?.value === "1") {
       let doc = this.obterDocumento();
@@ -163,12 +172,17 @@ export class EditarComponent implements OnInit {
       this.textDocumento = "CNPJ";
     }
   }
+
   tipoFornecedorForm(): AbstractControl | null {
     return this.fornecedorForm.get('tipoFornecedor');
   }
 
   obterDocumento(): AbstractControl | null {
     return this.fornecedorForm.get('documento');
+  }
+
+  validarFormulario() {
+    this.displayMessage = this.genericValidator.processarMensagens(this.fornecedorForm);
   }
 
   buscarCep(cep: string | null) {

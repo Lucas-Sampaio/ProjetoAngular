@@ -33,9 +33,9 @@
         <div class="form-group">
           <label class="control-label">Documento ( {{ textDocumento }} ) </label>
           <div>
-            <input cpf
+            <input class=" form-control" id="documento" type="text"
               [textMask]="tipoFornecedorForm()?.value === '1'? {mask: MASKS.cpf.textMask} : {mask: MASKS.cnpj.textMask} "
-              class=" form-control" id="documento" type="text" placeholder="{{textDocumento}} (requerido)"
+              placeholder="{{textDocumento}} (requerido)"
               formControlName="documento" [ngClass]="{'is-invalid': displayMessage.documento }" />
 
             <span class="text-danger" *ngIf="displayMessage.documento">
