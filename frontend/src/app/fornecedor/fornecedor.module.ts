@@ -13,6 +13,7 @@ import { NgBrazil } from 'ng-brazil';
 import { FornecedorService } from './services/fornecedor.service';
 import { FornecedorResolve } from './services/fornecedor.resolve';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FornecedorGuard } from './services/fornecedor.guard';
 
 
 
@@ -38,7 +39,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     FornecedorService,
-    FornecedorResolve
+    FornecedorResolve,
+    FornecedorGuard
   ]
 })
 export class FornecedorModule { }
