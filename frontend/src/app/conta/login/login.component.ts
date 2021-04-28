@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControl, FormControlName, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CustomValidators } from 'ng2-validation';
 import { ToastrService } from 'ngx-toastr';
 import { fromEvent, merge, Observable } from 'rxjs';
@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   errors: any[] = [];
   loginForm: FormGroup;
   usuario: Usuario;
+  returnUrl : string;
 
   validationMessages: ValidationMessages;
   genericValidator: GenericValidator;
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   constructor(private fb: FormBuilder,
     private contaService: ContaService,
     private router: Router,
+    private route : ActivatedRoute,
     private toastr: ToastrService) {
 
     this.validationMessages = {
@@ -39,6 +41,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         rangeLength: 'A senha deve possuir entre 6 e 15 caracteres'
       }
     }
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl']
     this.genericValidator = new GenericValidator(this.validationMessages)
   }
 
@@ -79,10 +82,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
     let toast = this.toastr.success('Registro realizado com sucesso!', 'Bem Vindo!');
     if (toast) {
       toast.onHidden.subscribe(() => {
-        this.router.navigate(['/home']);
+        this.returnUrl
+        ?  this.router.navigate([this.returnUrl])
+        :  this.router.navigate(['/home']);
       });
     }
   }
+
   processarFalha(fail: any) {
     this.errors = fail.error.errors;
     this.toastr.error('Ocorreu um erro!', 'Opa :(')
