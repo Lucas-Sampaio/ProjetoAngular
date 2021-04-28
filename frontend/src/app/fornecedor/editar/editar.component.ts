@@ -1,48 +1,28 @@
 import { Component, ElementRef, OnInit, ViewChildren } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControlName, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControlName, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MASKS, NgBrazilValidators } from 'ng-brazil';
 import { ToastrService } from 'ngx-toastr';
-import { fromEvent, merge, Observable } from 'rxjs';
-import { DisplayMessage, GenericValidator, ValidationMessages } from 'src/app/utils/generic-form-validation';
 import { StringUtils } from 'src/app/utils/string-utils';
 import { Endereco } from '../models/endereco';
-import { Fornecedor } from '../models/fornecedor';
-import { CepConsulta } from '../models/endereco';
 import { FornecedorService } from '../services/fornecedor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FornecedorFormBase } from '../fornecedor-form.base.component';
 
 @Component({
   selector: 'app-editar',
   templateUrl: './editar.component.html',
 })
-export class EditarComponent implements OnInit {
-
-  public MASKS = MASKS;
+export class EditarComponent extends FornecedorFormBase implements OnInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
-  errors: any[] = [];
   errorsEndereco: any[] = [];
-  fornecedorForm: FormGroup;
   enderecoForm: FormGroup;
-
-  fornecedor: Fornecedor = new Fornecedor();
   endereco: Endereco = new Endereco();
-
-  validationMessages: ValidationMessages;
-  genericValidator: GenericValidator;
-  displayMessage: DisplayMessage = {};
-  textoDocumento: string = '';
-
-  textDocumento: string;
   tipoFornecedor: number;
-  formResult: string = '';
 
-  mudancasNaoSalvas: boolean;
-
-  constructor(private fb: FormBuilder,
+  constructor(protected fb: FormBuilder,
     private fornecedorService: FornecedorService,
     private router: Router,
     private toastr: ToastrService,
@@ -50,36 +30,9 @@ export class EditarComponent implements OnInit {
     private modalService: NgbModal,
     private spinner: NgxSpinnerService) {
 
-    this.validationMessages = {
-      nome: {
-        required: 'Informe o Nome',
-      },
-      documento: {
-        required: 'Informe o Documento'
-      },
-      logradouro: {
-        required: 'Informe o Logradouro',
-      },
-      numero: {
-        required: 'Informe o Número',
-      },
-      bairro: {
-        required: 'Informe o Bairro',
-      },
-      cep: {
-        required: 'Informe o CEP'
-      },
-      cidade: {
-        required: 'Informe a Cidade',
-      },
-      estado: {
-        required: 'Informe o Estado',
-      }
-    };
+    super();
 
-    this.genericValidator = new GenericValidator(this.validationMessages);
-
-    this.fornecedor = this.route.snapshot.data["fornecedor"];
+    super.fornecedor = this.route.snapshot.data["fornecedor"];
     this.tipoFornecedor = this.fornecedor.tipoFornecedor;
   }
 
@@ -119,14 +72,7 @@ export class EditarComponent implements OnInit {
       documento: this.fornecedor.documento
     });
 
-    if (this.tipoFornecedorForm()?.value === "1") {
-      this.obterDocumento()?.setValidators([Validators.required, NgBrazilValidators.cpf]);
-      this.textDocumento = "CPF";
-    }
-    else {
-      this.obterDocumento()?.setValidators([Validators.required, NgBrazilValidators.cnpj]);
-      this.textDocumento = "CNPJ";
-    }
+    super.trocarValidacaoDocumento();
 
     this.enderecoForm.patchValue({
       id: this.fornecedor.endereco.id,
@@ -141,48 +87,9 @@ export class EditarComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.tipoFornecedorForm()?.valueChanges.subscribe(() => {
-      this.trocarValidacaoDocumento();
-      this.configurarElementosValidacao();
-      this.validarFormulario();
-    });
-
-    this.configurarElementosValidacao();
-  }
-
-  configurarElementosValidacao() {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-
-    merge(...controlBlurs).subscribe(() => {
-      this.validarFormulario();
-    });
-  }
-
-  trocarValidacaoDocumento() {
-    if (this.tipoFornecedorForm()?.value === "1") {
-      let doc = this.obterDocumento();
-      doc?.clearValidators();
-      doc?.setValidators([Validators.required, NgBrazilValidators.cpf]);
-      this.textDocumento = "CPF";
-    } else {
-      let doc = this.obterDocumento();
-      doc?.clearValidators();
-      doc?.setValidators([Validators.required, NgBrazilValidators.cnpj]);
-      this.textDocumento = "CNPJ";
-    }
-  }
-
-  tipoFornecedorForm(): AbstractControl | null {
-    return this.fornecedorForm.get('tipoFornecedor');
-  }
-
-  obterDocumento(): AbstractControl | null {
-    return this.fornecedorForm.get('documento');
-  }
-
-  validarFormulario() {
-    this.displayMessage = this.genericValidator.processarMensagens(this.fornecedorForm);
+    //monitora a alteração de valores
+    super.tipoFornecedorChange(this.formInputElements)
+    this.configurarValidacaoFormulario(this.formInputElements);
   }
 
   buscarCep(cep: string | null) {
@@ -196,19 +103,7 @@ export class EditarComponent implements OnInit {
         erro => this.errors.push(erro)
       );
   }
-
-  preencherEnderecoConsulta(CepConsulta: CepConsulta) {
-    this.fornecedorForm.patchValue({
-      endereco: {
-        logradouro: CepConsulta.logradouro,
-        bairro: CepConsulta.bairro,
-        cep: CepConsulta.cep,
-        cidade: CepConsulta.localidade,
-        estado: CepConsulta.uf
-      }
-    })
-  }
-
+  
   editarFornecedor() {
     if (this.fornecedorForm.dirty && this.fornecedorForm.valid) {
 
