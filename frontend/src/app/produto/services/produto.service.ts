@@ -20,7 +20,7 @@ export class ProdutoService extends BaseService {
 
   obterPorId(id: string): Observable<Produto> {
     return this.http
-      .get<Produto>(`${this.UrlServiceV1}/fornecedores/${id}`, super.obterAuthHeaderJson())
+      .get<Produto>(`${this.UrlServiceV1}/produtos/${id}`, super.obterAuthHeaderJson())
       .pipe(catchError(super.serviceError));
   }
 
