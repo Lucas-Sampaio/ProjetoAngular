@@ -14,6 +14,7 @@ import { FornecedorService } from './services/fornecedor.service';
 import { FornecedorResolve } from './services/fornecedor.resolve';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FornecedorGuard } from './services/fornecedor.guard';
+import { ListaProdutosComponent } from './lista-produtos/lista-produtos.component';
 
 
 
@@ -25,7 +26,8 @@ import { FornecedorGuard } from './services/fornecedor.guard';
     EditarComponent,
     ExcluirComponent,
     ListaComponent,
-    NovoComponent
+    NovoComponent,
+    ListaProdutosComponent
   ],
   imports: [
     CommonModule,
